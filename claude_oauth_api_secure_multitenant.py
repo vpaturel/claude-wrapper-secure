@@ -760,7 +760,8 @@ class SecureMultiTenantAPI:
 
             # Add extended thinking if provided
             if thinking:
-                settings["thinking"] = thinking
+                # Claude CLI uses alwaysThinkingEnabled (not thinking object)
+                settings["alwaysThinkingEnabled"] = True
 
             settings_json = json.dumps(settings)
             cmd.extend(["--settings", settings_json])
@@ -965,7 +966,8 @@ class SecureMultiTenantAPI:
 
             # Add extended thinking if provided
             if thinking:
-                settings["thinking"] = thinking
+                # Claude CLI uses alwaysThinkingEnabled (not thinking object)
+                settings["alwaysThinkingEnabled"] = True
 
             settings_json = json.dumps(settings)
             cmd.extend(["--settings", settings_json])
@@ -1357,7 +1359,8 @@ class SecureMultiTenantAPI:
 
             # Add extended thinking if provided
             if thinking:
-                settings["thinking"] = thinking
+                # Claude CLI uses alwaysThinkingEnabled (not thinking object)
+                settings["alwaysThinkingEnabled"] = True
 
             cmd.extend(["--settings", json.dumps(settings)])
 
