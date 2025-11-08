@@ -636,7 +636,9 @@ class SecureMultiTenantAPI:
         skip_mcp_permissions: bool = True,
         timeout: int = 180,
         stream: bool = False,
-        override_security: Optional[Dict] = None
+        override_security: Optional[Dict] = None,
+        fallback_model: Optional[str] = None,
+        thinking: Optional[Dict] = None
     ) -> Dict[str, Any]:
         """
         Crée un message avec isolation workspace complète.
@@ -721,6 +723,10 @@ class SecureMultiTenantAPI:
             }
             cmd.extend(["--model", model_map.get(model, model)])
 
+            # Fallback model (if primary overloaded)
+            if fallback_model:
+                cmd.extend(["--fallback-model", model_map.get(fallback_model, fallback_model)])
+
             # Session management
             # Only use --resume if session already exists (to avoid "No conversation found" error)
             if session_id:
@@ -751,6 +757,10 @@ class SecureMultiTenantAPI:
             # Add permissions if override provided
             if override_security:
                 settings["permissions"] = override_security
+
+            # Add extended thinking if provided
+            if thinking:
+                settings["thinking"] = thinking
 
             settings_json = json.dumps(settings)
             cmd.extend(["--settings", settings_json])
@@ -853,7 +863,9 @@ class SecureMultiTenantAPI:
         oauth_credentials: UserOAuthCredentials,
         model: str = "sonnet",
         session_id: Optional[str] = None,
-        mcp_servers: Optional[Dict[str, MCPServerConfig]] = None
+        mcp_servers: Optional[Dict[str, MCPServerConfig]] = None,
+        fallback_model: Optional[str] = None,
+        thinking: Optional[Dict] = None
     ) -> Iterator[Dict[str, Any]]:
         """
         Crée un message avec streaming bidirectionnel (keep-alive connection).
@@ -923,6 +935,10 @@ class SecureMultiTenantAPI:
             }
             cmd.extend(["--model", model_map.get(model, model)])
 
+            # Fallback model (if primary overloaded)
+            if fallback_model:
+                cmd.extend(["--fallback-model", model_map.get(fallback_model, fallback_model)])
+
             # Session management
             if session_id:
                 session_exists = self._session_exists(claude_dir, session_id)
@@ -946,6 +962,10 @@ class SecureMultiTenantAPI:
                     "subscription_type": credentials.subscription_type
                 }
             }
+
+            # Add extended thinking if provided
+            if thinking:
+                settings["thinking"] = thinking
 
             settings_json = json.dumps(settings)
             cmd.extend(["--settings", settings_json])
@@ -1310,6 +1330,10 @@ class SecureMultiTenantAPI:
             }
             cmd.extend(["--model", model_map.get(model, model)])
 
+            # Fallback model (if primary overloaded)
+            if fallback_model:
+                cmd.extend(["--fallback-model", model_map.get(fallback_model, fallback_model)])
+
             # Session management
             if session_id:
                 session_exists = self._session_exists(claude_dir, session_id)
@@ -1330,6 +1354,11 @@ class SecureMultiTenantAPI:
                     "subscription_type": credentials.subscription_type
                 }
             }
+
+            # Add extended thinking if provided
+            if thinking:
+                settings["thinking"] = thinking
+
             cmd.extend(["--settings", json.dumps(settings)])
 
             # MCP config
@@ -1426,7 +1455,9 @@ class SecureMultiTenantAPI:
         oauth_credentials: UserOAuthCredentials,
         model: str = "sonnet",
         session_id: Optional[str] = None,
-        mcp_servers: Optional[Dict[str, MCPServerConfig]] = None
+        mcp_servers: Optional[Dict[str, MCPServerConfig]] = None,
+        fallback_model: Optional[str] = None,
+        thinking: Optional[Dict] = None
     ) -> Iterator[Dict[str, Any]]:
         """
         Create message with process pool (multi-request keep-alive).
