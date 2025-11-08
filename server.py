@@ -1026,7 +1026,7 @@ async def health():
     """
     return {
         "status": "healthy",
-        "version": "5.0-SECURE",
+        "version": app.version,
         "security_level": "BALANCED",
         "timestamp": time.time()
     }
