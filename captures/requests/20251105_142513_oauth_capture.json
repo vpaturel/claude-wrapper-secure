@@ -1,0 +1,18 @@
+{
+  "request": {
+    "timestamp": "2025-11-05T14:25:13.766177",
+    "method": "POST",
+    "url": "https://statsig.anthropic.com/v1/rgstr?k=client-RRNS7R65EAtReO5XA4xDC3eU6ZdJQi6lLEP6b5j32Me&st=javascript-client&sv=3.12.1&t=1762349113548&sid=8494d1b1-b185-4de4-bda7-1024e1db1612&ec=1",
+    "path": "/v1/rgstr?k=client-RRNS7R65EAtReO5XA4xDC3eU6ZdJQi6lLEP6b5j32Me&st=javascript-client&sv=3.12.1&t=1762349113548&sid=8494d1b1-b185-4de4-bda7-1024e1db1612&ec=1",
+    "headers": {
+      "User-Agent": "Bun/1.3.1",
+      "Accept": "*/*",
+      "Host": "statsig.anthropic.com",
+      "Accept-Encoding": "gzip, deflate, br, zstd",
+      "Content-Length": "1374"
+    },
+    "body": "{\"events\":[{\"eventName\":\"tengu_api_cache_breakpoints\",\"metadata\":{\"totalMessageCount\":1,\"cachingEnabled\":true,\"model\":\"claude-sonnet-4-5-20250929\",\"sessionId\":\"55764be0-b5e8-4570-8d57-1d289f087987\",\"userType\":\"external\",\"betas\":\"claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14\",\"env\":\"{\\\"platform\\\":\\\"linux\\\",\\\"nodeVersion\\\":\\\"v24.3.0\\\",\\\"terminal\\\":\\\"non-interactive\\\",\\\"packageManagers\\\":\\\"npm\\\",\\\"runtimes\\\":\\\"node\\\",\\\"isRunningWithBun\\\":true,\\\"isCi\\\":false,\\\"isClaubbit\\\":false,\\\"isClaudeCodeRemote\\\":false,\\\"isGithubAction\\\":false,\\\"isClaudeCodeAction\\\":false,\\\"isClaudeAiAuth\\\":true,\\\"version\\\":\\\"2.0.33\\\",\\\"deploymentEnvironment\\\":\\\"docker\\\",\\\"wslVersion\\\":\\\"2\\\"}\",\"entrypoint\":\"sdk-cli\",\"isInteractive\":\"false\",\"clientType\":\"sdk-cli\",\"sweBenchRunId\":\"\",\"sweBenchInstanceId\":\"\",\"sweBenchTaskId\":\"\"},\"user\":{\"customIDs\":{\"sessionId\":\"55764be0-b5e8-4570-8d57-1d289f087987\"},\"userID\":\"79d87ea21601c470ff61f1023adcecc40ebc448ce4ba63ab73903b98e01d7a8a\",\"appVersion\":\"2.0.33\",\"custom\":{\"userType\":\"external\",\"subscriptionType\":\"max\",\"firstTokenTime\":0},\"statsigEnvironment\":{\"tier\":\"production\"}},\"time\":1762349110825}],\"statsigMetadata\":{\"sdkVersion\":\"3.12.1\",\"sdkType\":\"javascript-client\",\"stableID\":\"2b7f8df0-5c95-46d3-9fae-4933596c8f77\",\"sessionID\":\"8494d1b1-b185-4de4-bda7-1024e1db1612\",\"fallbackUrl\":null}}"
+  },
+  "response_raw": "HTTP/1.1 202 Accepted\r\nContent-Type: application/json\r\nPermissions-Policy: interest-cohort=()\r\nX-Content-Type-Options: nosniff\r\nX-Content-Type-Options: nosniff\r\nX-Frame-Options: SAMEORIGIN\r\nX-Response-Time: 0 ms\r\nAccess-Control-Allow-Credentials: true\r\nAccess-Control-Allow-Origin: *\r\nContent-Length: 16\r\nDate: Wed, 05 Nov 2025 13:25:11 GMT\r\nReferrer-Policy: strict-origin-when-cross-origin\r\nSet-Cookie: GCLB=\"504fcd4566a607cc\"; Max-Age=1; Path=/; HttpOnly\r\nAlt-Svc: h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000\r\nVia: 1.1 google, 1.1 google\r\nStrict-Transport-Security: max-age=2592000; includeSubDomains\r\nAlt-Svc: h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000\r\n\r\n{\"success\":true}",
+  "response_length": 682
+}

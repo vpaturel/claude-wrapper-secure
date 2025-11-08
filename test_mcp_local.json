@@ -1,0 +1,14 @@
+{
+  "permissions": {"defaultMode": "allow"},
+  "mcpServers": {
+    "n8n": {
+      "command": "python3",
+      "args": [
+        "/home/tincenv/wrapper-claude/mcp_proxy.py",
+        "--sse", "https://mcp-server-n8n-7zoujfobnq-ew.a.run.app/sse",
+        "--oauth2Bearer", "4b6c681c872eb26ab84d339880aafdf07bc30cb14785fb4be6ccadddcbb15ed1",
+        "--logLevel", "info"
+      ]
+    }
+  }
+}

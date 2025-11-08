@@ -1,0 +1,83 @@
+{
+  "timestamp": "2025-11-05T11:00:00.341127",
+  "request": {
+    "timestamp": "2025-11-05T11:00:00.341127",
+    "method": "POST",
+    "path": "/v1/messages/count_tokens?beta=true",
+    "headers": {
+      "accept": "application/json",
+      "anthropic-beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14,token-counting-2024-11-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+      "anthropic-version": "2023-06-01",
+      "authorization": "Bearer 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",
+      "content-type": "application/json",
+      "user-agent": "claude-cli/2.0.33 (external, cli)",
+      "x-app": "cli",
+      "x-stainless-arch": "x64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "Linux",
+      "x-stainless-package-version": "0.66.0",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "Connection": "keep-alive",
+      "Host": "localhost:8000",
+      "Accept-Encoding": "gzip, deflate, br, zstd",
+      "Content-Length": "330"
+    },
+    "body": {
+      "model": "claude-opus-4-1-20250805",
+      "messages": [
+        {
+          "role": "user",
+          "content": "foo"
+        }
+      ],
+      "tools": [
+        {
+          "name": "mcp__puppeteer__puppeteer_hover",
+          "description": "Hover an element on the page",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "selector": {
+                "type": "string",
+                "description": "CSS selector for element to hover"
+              }
+            },
+            "required": [
+              "selector"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Date": "Wed, 05 Nov 2025 10:00:00 GMT",
+      "Content-Type": "application/json",
+      "Content-Length": "20",
+      "Connection": "close",
+      "CF-RAY": "999b80671eced821-MRS",
+      "request-id": "req_011CUpYhfLSzqy2PaXEm5uUk",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "anthropic-organization-id": "dfc8fb78-2af7-446f-9683-dac08fd0d804",
+      "x-envoy-upstream-service-time": "86",
+      "cf-cache-status": "DYNAMIC",
+      "X-Robots-Tag": "none",
+      "Server": "cloudflare"
+    },
+    "body": {
+      "input_tokens": 396
+    },
+    "size_bytes": 20,
+    "is_streaming": false
+  },
+  "metadata": {
+    "is_streaming": false,
+    "is_error": false,
+    "size_bytes": 20
+  }
+}

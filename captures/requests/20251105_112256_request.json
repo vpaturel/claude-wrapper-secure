@@ -1,0 +1,76 @@
+{
+  "timestamp": "2025-11-05T11:22:56.852808",
+  "method": "POST",
+  "path": "/v1/messages/count_tokens?beta=true",
+  "headers": {
+    "accept": "application/json",
+    "anthropic-beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14,token-counting-2024-11-01",
+    "anthropic-dangerous-direct-browser-access": "true",
+    "anthropic-version": "2023-06-01",
+    "authorization": "Bearer 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",
+    "content-type": "application/json",
+    "user-agent": "claude-cli/2.0.33 (external, cli)",
+    "x-app": "cli",
+    "x-stainless-arch": "x64",
+    "x-stainless-lang": "js",
+    "x-stainless-os": "Linux",
+    "x-stainless-package-version": "0.66.0",
+    "x-stainless-retry-count": "0",
+    "x-stainless-runtime": "node",
+    "x-stainless-runtime-version": "v24.3.0",
+    "Connection": "keep-alive",
+    "Host": "localhost:8000",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Content-Length": "746"
+  },
+  "body": {
+    "model": "claude-opus-4-1-20250805",
+    "messages": [
+      {
+        "role": "user",
+        "content": "foo"
+      }
+    ],
+    "tools": [
+      {
+        "name": "mcp__memory__create_relations",
+        "description": "Create multiple new relations between entities in the knowledge graph. Relations should be in active voice",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "relations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "from": {
+                    "type": "string",
+                    "description": "The name of the entity where the relation starts"
+                  },
+                  "to": {
+                    "type": "string",
+                    "description": "The name of the entity where the relation ends"
+                  },
+                  "relationType": {
+                    "type": "string",
+                    "description": "The type of the relation"
+                  }
+                },
+                "required": [
+                  "from",
+                  "to",
+                  "relationType"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "relations"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}

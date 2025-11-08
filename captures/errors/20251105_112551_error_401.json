@@ -1,0 +1,92 @@
+{
+  "timestamp": "2025-11-05T11:25:51.904266",
+  "request": {
+    "timestamp": "2025-11-05T11:25:51.904266",
+    "method": "POST",
+    "path": "/v1/messages?beta=true",
+    "headers": {
+      "accept": "application/json",
+      "anthropic-beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14",
+      "anthropic-dangerous-direct-browser-access": "true",
+      "anthropic-version": "2023-06-01",
+      "authorization": "Bearer sk-ant-oat01-INVALID_TOKEN_FOR_TEST",
+      "content-type": "application/json",
+      "user-agent": "claude-cli/2.0.33 (external, cli)",
+      "x-app": "cli",
+      "x-stainless-arch": "x64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "Linux",
+      "x-stainless-package-version": "0.66.0",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600",
+      "Connection": "keep-alive",
+      "Host": "localhost:8000",
+      "Accept-Encoding": "gzip, deflate, br, zstd",
+      "Content-Length": "538"
+    },
+    "body": {
+      "model": "claude-haiku-4-5-20251001",
+      "max_tokens": 1,
+      "messages": [
+        {
+          "role": "user",
+          "content": "count"
+        }
+      ],
+      "tools": [
+        {
+          "name": "mcp__puppeteer__puppeteer_evaluate",
+          "description": "Execute JavaScript in the browser console",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "script": {
+                "type": "string",
+                "description": "JavaScript code to execute"
+              }
+            },
+            "required": [
+              "script"
+            ]
+          }
+        }
+      ],
+      "metadata": {
+        "user_id": "user_30a57580f2507a87ed4e34d6621742e8b928423cabd2076ea8ca520cc9c3b008_account_1ba668a2-22ea-4bb1-b844-28efc13e2298_session_b8530348-4072-41ad-8cc5-3d4836f6ce80"
+      }
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "Date": "Wed, 05 Nov 2025 10:25:51 GMT",
+      "Content-Type": "application/json",
+      "Content-Length": "133",
+      "Connection": "close",
+      "CF-RAY": "999ba6498c2e1854-MRS",
+      "x-should-retry": "false",
+      "request-id": "req_011CUpag3nVUAwDBdp6NzxWD",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "x-envoy-upstream-service-time": "19",
+      "cf-cache-status": "DYNAMIC",
+      "X-Robots-Tag": "none",
+      "Server": "cloudflare"
+    },
+    "body": {
+      "type": "error",
+      "error": {
+        "type": "authentication_error",
+        "message": "Invalid bearer token"
+      },
+      "request_id": "req_011CUpag3nVUAwDBdp6NzxWD"
+    },
+    "error": true
+  },
+  "metadata": {
+    "is_streaming": false,
+    "is_error": true,
+    "size_bytes": 0
+  }
+}

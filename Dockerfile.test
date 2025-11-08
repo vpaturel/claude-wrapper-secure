@@ -1,0 +1,36 @@
+# Dockerfile pour tests Claude CLI OAuth
+FROM ubuntu:22.04
+
+# Éviter les prompts interactifs
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+# Installer dépendances
+RUN apt-get update && apt-get install -y \
+    curl \
+    jq \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Installer Node.js (requis pour Claude CLI)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Créer utilisateur non-root
+RUN useradd -m -s /bin/bash testuser
+USER testuser
+WORKDIR /home/testuser
+
+# Installer Claude CLI
+RUN curl -fsSL https://storage.googleapis.com/anthropic-install/claude-cli/install.sh | sh
+
+# Ajouter Claude au PATH
+ENV PATH="/home/testuser/.local/bin:${PATH}"
+
+# Vérifier installation
+RUN claude --version || echo "Claude CLI installé"
+
+CMD ["/bin/bash"]

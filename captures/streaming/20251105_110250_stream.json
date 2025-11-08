@@ -1,0 +1,1728 @@
+{
+  "timestamp": "2025-11-05T11:02:50.587755",
+  "request": {
+    "timestamp": "2025-11-05T11:02:50.587755",
+    "method": "POST",
+    "path": "/v1/messages?beta=true",
+    "headers": {
+      "accept": "application/json",
+      "anthropic-beta": "oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14",
+      "anthropic-dangerous-direct-browser-access": "true",
+      "anthropic-version": "2023-06-01",
+      "authorization": "Bearer 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",
+      "content-type": "application/json",
+      "user-agent": "claude-cli/2.0.33 (external, cli)",
+      "x-app": "cli",
+      "x-stainless-arch": "x64",
+      "x-stainless-helper-method": "stream",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "Linux",
+      "x-stainless-package-version": "0.66.0",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600",
+      "Connection": "keep-alive",
+      "Host": "localhost:8000",
+      "Accept-Encoding": "gzip, deflate, br, zstd",
+      "Content-Length": "32964"
+    },
+    "body": {
+      "model": "claude-haiku-4-5-20251001",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<system-reminder>\nAs you answer the user's questions, you can use the following context:\n# claudeMd\nCodebase and user instructions are shown below. Be sure to adhere to these instructions. IMPORTANT: These instructions OVERRIDE any default behavior and you MUST follow them exactly as written.\n\nContents of /home/tincenv/.claude/CLAUDE.md (user's private global instructions for all projects):\n\n# 🤖 Claude Code - Instructions tincenv ULTIME\n\n## 🚀 EXÉCUTION AUTOMATIQUE EN PARALLÈLE\n\n**RÈGLE ABSOLUE:** Utiliser Task tool pour TOUTES tâches complexes afin de :\n- ✅ Réduire tokens dans conversation principale\n- ✅ Exécuter tâches en parallèle (5-10x plus rapide)\n- ✅ Meilleure autonomie\n\n### Quand utiliser Task tool (OBLIGATOIRE)\n\n**TOUJOURS utiliser pour:**\n- Création de fichiers multiples (>2 fichiers)\n- Recherche/exploration codebase\n- Code review complet\n- Tests automatisés (linting, tests, sécurité)\n- Génération code depuis contrats\n- Refactoring >100 lignes\n- Documentation complète\n- Analyse multi-fichiers\n\n**Exemple CORRECT:**\n```\nUSER: Crée un endpoint POST /users avec tests\n\nCLAUDE: Je vais lancer 3 agents en parallèle:\n- Agent 1: Créer tests unitaires\n- Agent 2: Créer endpoint FastAPI\n- Agent 3: Créer tests contrat\n\n[Utilise Task tool 3 fois en parallèle]\n```\n\n**Exemple INCORRECT (❌):**\n```\nUSER: Crée un endpoint POST /users avec tests\n\nCLAUDE: [Crée directement les fichiers un par un dans conversation]\n❌ Consomme trop de tokens\n❌ Pas de parallélisation\n❌ Lent\n```\n\n### Format parallélisation\n\n```markdown\n**Plan d'exécution parallèle:**\n1. ✅ Agent A - Créer backend/src/api/routes.py\n2. ✅ Agent B - Créer backend/tests/unit/test_routes.py\n3. ✅ Agent C - Créer backend/tests/contract/test_api.py\n\n[Lance 3 Task tools simultanément]\n\n**Résultats:**\n- Agent A: ✅ Terminé (route créée)\n- Agent B: ✅ Terminé (tests unitaires OK)\n- Agent C: ✅ Terminé (tests contrat OK)\n```\n\n### Seuils déclenchement\n\n| Tâche | Utiliser Task | Raison |\n|-------|---------------|--------|\n| Créer 1 fichier simple | ❌ | Direct OK |\n| Créer 2+ fichiers | ✅ | Parallélisation |\n| Recherche codebase | ✅ | Économie tokens |\n| Tests complets | ✅ | Autonomie |\n| Refactor >50 lignes | ✅ | Complexité |\n\n---\n\n## 🧠 MODE EXTENDED THINKING\n\n**TOUJOURS ACTIF:** Configuration via `MAX_THINKING_TOKENS=30000` dans ~/.bashrc\n**Modèle:** `opus` pour qualité maximale (Plan Max)\n\n---\n\n## 🚨 RÈGLE #1 : TDD OBLIGATOIRE\n\n**PROCESSUS IMPOSÉ:**\n```\n1. Créer tests/unit/test_*.py (RED)\n2. Exécuter pytest (doit échouer)\n3. Créer src/*.py\n4. Exécuter pytest (doit passer - GREEN)\n5. Coverage >= 90% (90% minimum pour zéro bug)\n```\n\n**Auto-reformulation:** \"Crée X\" → \"Crée tests pour X, puis implémente X\"\n\n**Tests obligatoires:** Happy path, edge cases, errors, validation, async, side effects, erreurs en cascade, edge cases système\n\n---\n\n## 🔒 PROTECTION FONCTIONNALITÉS\n\n**RÈGLE ABSOLUE:** Avant TOUTE suppression/modification de fonctionnalité existante :\n\n1. ❌ **JAMAIS supprimer** code/feature sans accord EXPLICITE utilisateur\n2. ⚠️ **TOUJOURS demander** avant refactoring qui change comportement\n3. ✅ **TOUJOURS proposer** alternatives si problème détecté\n4. 📋 **TOUJOURS lister** impacts avant modification breaking\n\n**Exceptions autorisées (sans demander) :**\n- Correction bugs (comportement actuel incorrect)\n- Optimisation performance (même comportement externe)\n- Refactoring interne (pas de changement API/UX)\n- Ajout tests (pas de modif code prod)\n\n**Si doute → DEMANDER confirmation utilisateur**\n\n---\n\n## 🔗 SYNCHRONISATION BACKEND/FRONTEND AUTO\n\n**RÈGLE ABSOLUE:** `contracts/` est la SOURCE DE VÉRITÉ\n\n### Workflow imposé\n\n**AVANT toute modif API:**\n1. Modifier `contracts/api.yaml` (OpenAPI spec)\n2. Générer backend + frontend depuis contrat\n3. Lancer tests contrat (backend provider + frontend consumer)\n4. Validation E2E\n\n**Scripts automatiques:**\n```bash\n# Après modif contracts/api.yaml\nbash scripts/generate-backend-from-contract.sh\nbash scripts/generate-frontend-from-contract.sh\npytest backend/tests/contract/\nnpm test -- frontend/tests/contract/\n```\n\n**Contract Testing (OBLIGATOIRE):**\n\nBackend (Provider):\n```python\n# backend/tests/contract/test_api_contract.py\nfrom pact import verifier\n\ndef test_api_honors_contract():\n    verifier.verify_provider(\n        provider=\"UserAPI\",\n        contract_dir=\"contracts/pacts/\",\n        provider_base_url=\"http://localhost:8000\"\n    )\n```\n\nFrontend (Consumer):\n```typescript\n// frontend/tests/contract/api.contract.test.ts\nimport { PactV3 } from '@pact-foundation/pact';\n\ntest('frontend respects API contract', async () => {\n  await provider\n    .given('user exists')\n    .uponReceiving('get user request')\n    .withRequest({ method: 'GET', path: '/api/users/123' })\n    .willRespondWith({ status: 200, body: { id: 123, name: 'John' } });\n});\n```\n\n**Checklist sync:**\n- [ ] Contract tests backend PASS\n- [ ] Contract tests frontend PASS\n- [ ] OpenAPI spec valide (swagger-cli validate contracts/api.yaml)\n- [ ] Types générés synchronisés\n\n---\n\n## 🤖 AUTONOMIE MAXIMALE - HOOKS & AGENTS\n\n### Hooks automatiques (.claude/hooks/)\n\n**on-file-write.sh** (exécuté après chaque Write/Edit):\n```bash\n#!/bin/bash\nFILE=\"$1\"\nruff check \"$FILE\" --fix\nmypy \"$FILE\" --strict\nTEST_FILE=\"tests/unit/test_$(basename $FILE)\"\n[ -f \"$TEST_FILE\" ] && pytest \"$TEST_FILE\" -v\n```\n\n**on-test-fail.sh** (exécuté si pytest échoue):\n```bash\n#!/bin/bash\nERROR_LOG=\"$1\"\n# Auto-analyse et correction\nclaude-code --prompt \"Corrige cette erreur: $(cat $ERROR_LOG)\" --auto-apply\n```\n\n**on-contract-change.sh** (exécuté si contracts/ modifié):\n```bash\n#!/bin/bash\nbash scripts/generate-backend-from-contract.sh\nbash scripts/generate-frontend-from-contract.sh\npytest backend/tests/contract/\nnpm test -- frontend/tests/contract/\n```\n\n### Agents autonomes\n\n**Agent Security Audit** (lance après chaque commit):\n```bash\nclaude-code --agent security-audit \\\n  --check \"OWASP Top 10, secrets, injections\" \\\n  --auto-fix=true\n```\n\n**Agent Contract Sync** (lance après modif API):\n```bash\nclaude-code --agent contract-sync \\\n  --regenerate backend frontend \\\n  --run-tests contract e2e\n```\n\n**Agent Performance Check** (lance avant merge):\n```bash\nclaude-code --agent performance-check \\\n  --profile \"N+1, memory, slow endpoints\" \\\n  --threshold \"P95<200ms\"\n```\n\n---\n\n## ✅ VALIDATION MULTI-NIVEAUX (ZÉRO BUG)\n\n**Process imposé avant TOUT commit (ordre strict):**\n\n### Niveau 1: Statique (0 tolérance)\n```bash\nruff check . --select ALL\nmypy . --strict\nbandit -r src/ -ll\nsafety check\nnpm run type-check  # Frontend si applicable\n```\n**Seuil:** 0 erreur, 0 warning\n\n### Niveau 2: Tests (coverage 90%+)\n```bash\npytest tests/unit/ --cov=src --cov-fail-under=90\npytest tests/property/ -v  # Property-based\nmutmut run --paths-to-mutate=src/  # Mutation (>95% tués)\n```\n\n### Niveau 3: Contract (100% conformité)\n```bash\npytest tests/contract/\nnpm run test:contract\nswagger-cli validate contracts/api.yaml\n```\n\n### Niveau 4: E2E + Chaos\n```bash\npytest tests/e2e/\npytest tests/chaos/  # Pod kill, network latency, DB failover\n```\n\n### Niveau 5: Performance (non-régression)\n```bash\nlocust -f tests/load/locustfile.py --users 1000\n# Seuils: P95<200ms, P99<500ms, 0 memory leak\n```\n\n### Niveau 6: Security (audit complet)\n```bash\ntrivy fs --severity HIGH,CRITICAL .\nnpm audit --audit-level=high\nsemgrep --config=auto .\n```\n\n**RÈGLE:** Si UN niveau échoue → BLOQUER + AUTO-FIX + RE-VALIDER tous niveaux\n\n---\n\n## 🧠 CONTEXTE AUTO-DÉTECTÉ\n\n**Avant génération, analyser:**\n1. Type projet (FastAPI→async, Flask→sync, Click→CLI)\n2. Stack (lire requirements.txt/pyproject.toml, package.json)\n3. Conventions (nomenclature, imports, async/sync, ORM, docstrings)\n4. Config existante (pytest.ini, mypy.ini, tsconfig.json)\n5. **Contrats API** (contracts/api.yaml si existe)\n\n---\n\n## 🏗️ ARCHITECTURE\n\n**SOLID + Patterns:** Repository, Factory, Strategy, DI, Observer, Circuit Breaker, Retry\n\n**Anti-patterns interdits:** God Objects, Spaghetti, Magic Numbers, Code dupliqué, Tight Coupling\n\n**Structure dépendances:**\n- `api/` → `core/` + `infrastructure/`\n- `core/` → RIEN (pure logic)\n- `infrastructure/` → implémente interfaces `core/`\n- **`contracts/`** → SOURCE DE VÉRITÉ (OpenAPI, types partagés)\n\n---\n\n## 📝 DOCS\n\n**Docstrings Google (obligatoire):**\n```python\ndef func(p1: int, p2: str = \"x\") -> dict[str, Any]:\n    \"\"\"Une ligne description.\n\n    Args:\n        p1: Description (unité si applicable).\n        p2: Description (default: \"x\").\n\n    Returns:\n        Structure détaillée: {\"key\": value}\n\n    Raises:\n        ValueError: Condition exacte.\n\n    Examples:\n        >>> func(5, \"test\")\n        {\"status\": \"ok\"}\n    \"\"\"\n```\n\n**README sections:** Features, Prerequisites, Installation, Config, Testing, Usage, Docker, Deploy, Architecture, Troubleshooting\n\n---\n\n## 🔒 VALIDATION & SÉCURITÉ\n\n**Validation Pydantic (obligatoire):**\n```python\nclass Input(BaseModel):\n    email: str = Field(..., regex=r'^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$')\n    age: int = Field(..., ge=0, le=150)\n```\n\n**Checklist sécurité:**\n- Validation TOUTES entrées, Sanitization (bleach, escape)\n- JAMAIS secrets hardcodés (GCP Secret Manager)\n- JAMAIS SQL brut (ORM), Rate limiting, HTTPS prod, Passwords hashés (bcrypt)\n- Tests OWASP Top 10 (injection SQL, XSS, CSRF, path traversal)\n\n---\n\n## ⚠️ ERREURS\n\n**Hiérarchie exceptions:**\n```python\nclass AppBaseException(Exception):\n    def __init__(self, msg: str, code: str = None, details: dict = None):\n        self.message, self.code, self.details = msg, code, details\n```\n\n**Sous-classes:** ValidationError, NotFoundError, AuthError, ExternalServiceError, DatabaseError\n\n**Logging structuré (obligatoire):**\n```python\nlogger.info(\"event_name\", key1=val1, key2=val2)  # ✅\nlogger.info(f\"Processing {id}\")  # ❌\n```\n\n---\n\n## 🎯 TYPES\n\n**Type hints 100%:**\n```python\ndef func(items: List[str], callback: Optional[Callable[[str], None]] = None) -> Dict[str, int]:\n    ...\n```\n\n**mypy.ini strict:** `disallow_untyped_defs = True`, `strict = True`\n\n---\n\n## ⚡ PERFORMANCE\n\n- Profiler avant optimiser, Generators pour grandes données\n- Cache fonctions pures coûteuses, Async pour I/O\n- Connection pooling, Batch operations\n- **Pas de N+1 queries** (toujours vérifier avec tests)\n\n```python\n# Generator\ndef read_large(path: str) -> Iterator[str]:\n    with open(path) as f:\n        for line in f:\n            yield line.strip()\n\n# Async concurrent\nasync def fetch_many(ids: List[int]) -> List[User]:\n    async with aiohttp.ClientSession() as s:\n        return await asyncio.gather(*[fetch_user(s, id) for id in ids])\n```\n\n---\n\n## 🧪 TESTS\n\n**Paramétrés:**\n```python\n@pytest.mark.parametrize(\"input,expected\", [\n    (\"valid@test.com\", \"valid@test.com\"),\n    (\"USER@TEST.COM\", \"user@test.com\"),\n])\ndef test_emails(input, expected):\n    assert validate(input) == expected\n```\n\n**Property-based:**\n```python\nfrom hypothesis import given, strategies as st\n\n@given(st.floats(min_value=0), st.floats(min_value=0, max_value=1))\ndef test_discount_props(price, discount):\n    result = calc_discount(price, discount)\n    assert result <= price and result >= 0\n```\n\n**Fixtures:**\n```python\n@pytest.fixture\nasync def db_session():\n    session = SessionLocal()\n    try:\n        yield session\n    finally:\n        await session.rollback()\n        await session.close()\n```\n\n---\n\n## 🔥 TESTS CRITIQUES : ERREURS CASCADE & EDGE CASES\n\n### 🌊 Erreurs en Cascade (OBLIGATOIRES)\n\n```python\n# 1. DB fail → Cache fail → Service fail\nasync def test_cascade_db_cache_failure(mocker):\n    mocker.patch(\"repository.get_user\", side_effect=DatabaseError())\n    mocker.patch(\"cache.get\", side_effect=RedisConnectionError())\n\n    with pytest.raises(ServiceUnavailableError) as exc:\n        await user_service.get_user(123)\n\n    assert \"All data sources unavailable\" in str(exc.value)\n\n# 2. Timeout → Retry → Circuit breaker\nasync def test_cascade_timeout_circuit_breaker(mocker):\n    mocker.patch(\"external_api.call\", side_effect=asyncio.TimeoutError())\n\n    for i in range(6):\n        with pytest.raises((TimeoutError, CircuitBreakerOpenError)):\n            await api_client.fetch_data(f\"req_{i}\")\n```\n\n### ⚡ Edge Cases Système (OBLIGATOIRES)\n\n```python\n# Mémoire limite\ndef test_edge_memory_large_dataset():\n    large_data = [{\"id\": i, \"data\": \"x\" * 1000} for i in range(1_000_000)]\n    result = process_large_dataset(large_data)  # Doit streamer\n    assert psutil.Process().memory_info().rss / 1024 / 1024 < 100\n\n# Concurrence extrême\nasync def test_edge_extreme_concurrency():\n    tasks = [service.process({\"id\": i}) for i in range(10_000)]\n    results = await asyncio.gather(*tasks, return_exceptions=True)\n    successful = sum(1 for r in results if not isinstance(r, Exception))\n    assert successful > 0\n\n# Caractères spéciaux\n@pytest.mark.parametrize(\"malicious\", [\n    \"\\x00\" * 1000, \"�\" * 10000, \"🔥\" * 5000, \"<script>alert('xss')</script>\" * 100\n])\ndef test_edge_special_characters(malicious):\n    result = validate_and_sanitize(malicious)\n    assert result.is_valid is False\n\n# Race conditions\nasync def test_edge_race_condition():\n    user_id = 123\n    await asyncio.gather(*[increment_balance(user_id, 1) for _ in range(100)])\n    user = await db.get_user(user_id)\n    assert user.balance == 100  # Avec locking correct\n```\n\n### ✅ Checklist Tests COMPLÈTE\n\n**Avant merger:**\n- [ ] Happy paths (scénario nominal)\n- [ ] Erreurs métier (validation, 404, 401/403)\n- [ ] **Erreurs cascade** (DB→Cache, Timeout→Retry→CB, Transaction→Rollback)\n- [ ] **Edge cases système** (mémoire, concurrence 1k+, timeouts <100ms, unicode/nulls, fichiers vides/énormes, race conditions)\n- [ ] Sécurité (SQL injection, XSS, path traversal, rate limiting)\n- [ ] Performance (pas N+1, pagination >10k, cache, <200ms P95)\n- [ ] **Contract tests** (backend provider + frontend consumer)\n\n**Coverage >= 90% + Mutation >95% OBLIGATOIRE**\n\n---\n\n## 🧬 TESTS AVANCÉS (Features Critiques)\n\n### 🔬 Mutation Testing\n\n```bash\npip install mutmut\nmutmut run --paths-to-mutate=src/\nmutmut results  # Objectif: >95% mutants tués\n```\n\n**Exemple test qui tue mutants:**\n```python\n@pytest.mark.parametrize(\"price,percent,expected\", [\n    (100, 0, 100), (100, 100, 0), (100, 50, 50)\n])\ndef test_discount_precision(price, percent, expected):\n    assert calculate_discount(price, percent) == expected\n```\n\n### 🌪️ Chaos Engineering\n\n```python\n# Pod kill\nasync def test_chaos_pod_kill():\n    await kill_random_instance()\n    response = await client.get(\"/health\")\n    assert response.status_code == 200  # App survit\n\n# Network latency\nasync def test_chaos_network_latency():\n    await inject_network_latency(500)  # 500ms\n    response = await client.get(\"/api/users\")\n    assert response.status_code == 200\n    assert duration < 2.0  # Timeout correct\n```\n\n### 🎯 Fuzz Testing\n\n```python\nfrom hypothesis import given, strategies as st\n\n@given(st.text())\ndef test_fuzz_email_validation(email_input):\n    try:\n        result = validate_email(email_input)\n        if result.is_valid:\n            assert \"@\" in email_input\n    except ValueError:\n        pass  # Erreur acceptable\n    except Exception as e:\n        pytest.fail(f\"Crash: {e}\")  # BUG trouvé !\n```\n\n### 📝 Conformité (RGPD/SOC2/PCI)\n\n```python\n# RGPD: Droit à l'oubli\nasync def test_gdpr_user_deletion():\n    user = await create_test_user()\n    await user_service.delete_user_gdpr(user.id)\n\n    assert await db.users.find_one({\"_id\": user.id}) is None\n    orders = await db.orders.find({\"user_id\": user.id}).to_list(None)\n    assert all(o[\"user_id\"] == \"DELETED_USER\" for o in orders)\n\n# SOC2: Audit logs\nasync def test_soc2_access_logs():\n    await sensitive_service.view_data(user_id, doc_id)\n    log = await db.audit_logs.find_one({\"user_id\": user_id, \"action\": \"view_data\"})\n    assert log is not None and log[\"timestamp\"] is not None\n\n# PCI-DSS: Pas de carte stockée\nasync def test_pci_no_card_storage():\n    payment = await payment_service.process({\"card_number\": \"4111111111111111\"})\n    db_payment = await db.payments.find_one({\"_id\": payment.id})\n    assert \"4111111111111111\" not in str(db_payment)\n```\n\n**Checklist Tests Avancés:**\n- [ ] Mutation: score >95%\n- [ ] Chaos: pod kill, network latency, DB failover\n- [ ] Contrat: consumer/provider vérifiés\n- [ ] Fuzz: endpoints publics fuzzés 10k+ inputs\n- [ ] Conformité: RGPD suppression, SOC2 audit logs, PCI pas de carte\n\n---\n\n## 🛡️ RÉSILIENCE\n\n```python\nfrom circuitbreaker import circuit\nfrom tenacity import retry, stop_after_attempt, wait_exponential\n\n@circuit(failure_threshold=5, recovery_timeout=60)\n@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))\nasync def call_api(endpoint: str) -> dict:\n    ...\n\n# Graceful degradation\nasync def get_recommendations(uid: int) -> List[Product]:\n    try:\n        return await ml_service.recommend(uid, timeout=2)\n    except (TimeoutError, MLError):\n        return await get_popular_products(limit=10)\n```\n\n---\n\n## 📊 OBSERVABILITÉ\n\n```python\n# Tracing\nfrom opentelemetry import trace\ntracer = trace.get_tracer(__name__)\n\nwith tracer.start_as_current_span(\"process_order\") as span:\n    span.set_attribute(\"order.id\", oid)\n\n# Métriques\nfrom prometheus_client import Counter, Histogram\norders_total = Counter('orders_total', 'Total orders', ['status'])\nrequest_duration = Histogram('request_duration_seconds', 'Latency', ['endpoint'])\n\n@request_duration.labels(endpoint='/orders').time():\n    order = create_order(data)\n    orders_total.labels(status='created').inc()\n\n# Health checks\n@app.get(\"/health\")\nasync def health():\n    checks = {\"db\": await check_db(), \"redis\": await check_redis()}\n    overall = all(c[\"status\"] == \"healthy\" for c in checks.values())\n    return JSONResponse(\n        status_code=200 if overall else 503,\n        content={\"status\": \"healthy\" if overall else \"unhealthy\", \"checks\": checks}\n    )\n```\n\n---\n\n## 🚫 INTERDICTIONS\n\n- ❌ \"Generated with Claude Code\" dans PR/commits\n- ❌ Code prod sans tests\n- ❌ Hardcoder secrets\n- ❌ SQL brut\n- ❌ eval(), exec(), pickle sur données non fiables\n- ❌ Logger secrets\n- ❌ `except Exception:` sans re-raise\n- ❌ **BASH: utiliser `eval` au lieu de `bash -c`**\n- ❌ **BASH: échapper manuellement `\\$`, `\\(`, `\\)`**\n- ❌ **BASH: commandes >3 lignes sans script temporaire**\n- ❌ **Modifier API sans mettre à jour contracts/api.yaml d'abord**\n\n---\n\n## 🌍 ENVIRONNEMENT\n\n**Système:** WSL Ubuntu, User: tincenv, Workdir: /home/tincenv, GCP prioritaire\n\n**Secrets GCP:**\n```python\nfrom google.cloud import secretmanager\ndef get_secret(name: str) -> str:\n    client = secretmanager.SecretManagerServiceClient()\n    response = client.access_secret_version(\n        request={\"name\": f\"projects/{PROJECT_ID}/secrets/{name}/versions/latest\"}\n    )\n    return response.payload.data.decode(\"UTF-8\")\n```\n\n---\n\n## 🐚 RÈGLES BASH STRICTES\n\n### ❌ INTERDICTIONS\n\n```bash\n# ❌ JAMAIS eval\neval \"$COMMAND\"\n\n# ❌ JAMAIS échapper manuellement\nPIPELINE_ID\\=\\$( cat file.json | jq .id )\n\n# ❌ JAMAIS echo pour exécuter\necho curl https://api.com\n```\n\n### ✅ MÉTHODES CORRECTES\n\n**Méthode 1: Script temporaire (>3 lignes)**\n```bash\ncat > /tmp/script.sh <<'EOF'\n#!/bin/bash\nset -euo pipefail\nRESPONSE=$(curl -s https://api.com)\nID=$(echo \"$RESPONSE\" | jq -r .id)\necho \"ID: $ID\"\nEOF\nbash /tmp/script.sh\n```\n\n**Méthode 2: bash -c (<3 lignes)**\n```bash\nbash -c \"curl -s https://api.com | jq .id\"\n```\n\n**Méthode 3: Fonctions**\n```bash\ntrigger_pipeline() {\n  local project=\"$1\"\n  curl -s -XPOST \"https://gitlab.com/api/v4/projects/${project}/pipeline\" | jq -r .id\n}\nPIPELINE_ID=$(trigger_pipeline \"123\")\n```\n\n---\n\n## 📦 GIT & CI/CD\n\n**Branches:** feature/* → develop → main\n\n**GitLab CI:**\n```yaml\nstages: [quality, build, deploy]\nquality:\n  script:\n    - ruff check src/ tests/\n    - mypy src/ --strict\n    - pytest --cov --cov-fail-under=90\n    - mutmut run --paths-to-mutate=src/\nbuild:\n  script:\n    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .\ndeploy:\n  script:\n    - gcloud run deploy myapp --image $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA\n  only: [main]\n```\n\n**Pre-commit:** trailing-whitespace, black, isort, ruff, mypy\n\n**Commits:** Conventional (feat/fix/docs/test/refactor/perf/chore)\n\n---\n\n## 🏗️ STRUCTURE PROJET\n\n```\nprojet/\n├── contracts/              # SOURCE DE VÉRITÉ\n│   ├── api.yaml           # OpenAPI spec\n│   ├── types.ts           # Types partagés frontend\n│   └── validators.py      # Validateurs Pydantic backend\n│\n├── backend/\n│   ├── src/\n│   │   ├── core/          # Business logic (pure)\n│   │   ├── api/           # FastAPI routes (généré depuis contracts/)\n│   │   └── infrastructure/\n│   ├── tests/\n│   │   ├── unit/\n│   │   ├── integration/\n│   │   ├── contract/      # Tests contrat provider\n│   │   ├── e2e/\n│   │   └── chaos/\n│   └── .hooks/\n│\n├── frontend/\n│   ├── src/\n│   │   ├── api/\n│   │   │   └── client.ts  # Client API (généré depuis contracts/)\n│   │   ├── types/\n│   │   │   └── api.ts     # Types (générés depuis contracts/)\n│   │   └── components/\n│   ├── tests/\n│   │   ├── unit/\n│   │   └── contract/      # Tests contrat consumer\n│   └── .hooks/\n│\n├── .claude/\n│   ├── CLAUDE.md          # Ce fichier\n│   ├── hooks/             # Hooks auto\n│   ├── agents/            # Agents custom\n│   └── commands/          # Slash commands\n│\n└── scripts/\n    ├── generate-backend-from-contract.sh\n    ├── generate-frontend-from-contract.sh\n    └── validate-contracts.sh\n```\n\n---\n\n## 📋 CONFIG FILES\n\n**pytest.ini:**\n```ini\n[tool:pytest]\ntestpaths = tests\naddopts = -v --cov=src --cov-report=term-missing --cov-fail-under=90\n```\n\n**pyproject.toml:**\n```toml\n[tool.black]\nline-length = 100\n[tool.ruff]\nselect = [\"E\", \"W\", \"F\", \"I\", \"B\", \"C4\", \"S\"]  # S = security\n```\n\n---\n\n## 🚀 AUTO-PARALLÉLISATION\n\n**Claude détecte automatiquement et choisit:**\n- **Parallel (Bash):** Tests, linting, builds (3-5x plus rapide)\n- **Multi-agents:** Code review, security scan, performance audit (5-10x)\n\n**Généré automatiquement:**\n```bash\n# Parallel pour validation multi-niveaux\nif command -v parallel &> /dev/null; then\n  parallel --halt soon,fail=1 ::: \\\n    \"ruff check .\" \\\n    \"mypy . --strict\" \\\n    \"pytest tests/unit/\" \\\n    \"pytest tests/contract/\"\nelse\n  ruff check . & mypy . --strict & pytest tests/unit/ & pytest tests/contract/ & wait\nfi\n```\n\n---\n\n## 🔄 PATTERN ASYNCHRONE - POLLING\n\n**Pour tâches longues (>10s):**\n\n```bash\nTASK_ID=$(uuidgen | cut -d'-' -f1)\nDONE_FILE=\"/tmp/task_${TASK_ID}.done\"\n\n# Lancer background\n(\n  if bash -c \"$COMMAND\" > \"/tmp/task_${TASK_ID}.log\" 2>&1; then\n    echo \"0\" > \"$DONE_FILE\"\n  else\n    echo \"$?\" > \"$DONE_FILE\"\n  fi\n) &\n\n# Polling (10 checks max, 30s interval)\nfor attempt in $(seq 1 10); do\n  sleep 30\n  if [ -f \"$DONE_FILE\" ]; then\n    EXIT_CODE=$(cat \"$DONE_FILE\")\n    [ \"$EXIT_CODE\" = \"0\" ] && echo \"✅ Success\" || echo \"❌ Failed\"\n    break\n  fi\n  echo \"⏳ Check $attempt/10...\"\ndone\n```\n\n**Règles:**\n- ❌ JAMAIS `tail -f`, `wait`, boucle infinie\n- ✅ TOUJOURS limite de checks (10 max)\n- ✅ TOUJOURS timeout gracieux\n\n---\n\n## ✅ CHECKLIST PRÉ-COMMIT\n\n**Code:** Type hints 100%, docstrings, DRY, fonctions <20 lignes\n\n**Tests:** TDD, coverage >=90%, unit+edge+cascade+contract, parametrized, property-based, mutation >95%\n\n**Sécurité:** Validation, sanitization, pas secrets, rate limiting, ORM, tests OWASP Top 10\n\n**Performance:** Pas N+1, indexes, caching, generators, async, pooling, P95<200ms\n\n**Résilience:** Circuit breakers, retry, timeouts, fallbacks, chaos tests\n\n**Observabilité:** Logs JSON, tracing, métriques, health checks\n\n**Docs:** README complet, architecture, docstrings, OpenAPI spec\n\n**Infra:** Dockerfile, docker-compose, .gitignore, .env.example\n\n**CI/CD:** GitLab CI, tests auto, linting, security scan, mutation testing\n\n**Contracts:** Backend/Frontend synchronisés, tests contrat PASS\n\n**Score minimum:** 95% items cochés pour merger (zéro bug = exigence max)\n\n---\n\n## 🎯 SLASH COMMANDS CUSTOM\n\n- `/check-all` - Validation complète 6 niveaux + rapport\n- `/sync-contracts` - Sync backend/frontend depuis contracts/api.yaml\n- `/security-audit` - Audit sécu complet OWASP Top 10\n- `/performance-audit` - Audit perfs (N+1, memory, slow queries)\n- `/auto-heal` - Détecte problèmes + auto-fix + valide\n\n---\n\n## 🚀 AUTO-REVIEW MENTAL\n\n**Avant présenter (checklist mentale rapide):**\n1. Exceptions non gérées? 2. Edge cases oubliés? 3. Trop responsabilités?\n4. Code mort? 5. Noms explicites? 6. Boucles O(n²)?\n7. Devrait être async? 8. DB dans boucle (N+1)? 9. Entrées validées?\n10. Risque injection? 11. Secrets exposés? 12. Permissions vérifiées?\n13. **Contrat API mis à jour?** 14. **Tests contrat PASS?**\n\n**Si 1 problème → REFACTOR avant présenter**\n\n---\n\n## 🏆 PHILOSOPHIE\n\n**Code doit être (ordre priorité):**\n1. **Correctness** (testé à 90%+, mutation >95%)\n2. **Security** (0 vulnérabilité, validation complète)\n3. **Maintainability** (propre, documenté, contracts/)\n4. **Performance** (optimisé, P95<200ms, 0 N+1)\n\n**RÈGLE D'OR:** Code prod sans tests préalables = INVALIDE → SUPPRIMER et RECOMMENCER\n\n**RÈGLE #2:** Modification API sans contracts/api.yaml = INVALIDE → RECOMMENCER\n\n**AUCUNE EXCEPTION. JAMAIS.**\n\n\nContents of /home/tincenv/analyse-claude-ai/.claude/CLAUDE.md (project instructions, checked into the codebase):\n\n  ## 📚 PROJET EN COURS : DOCUMENTATION CLAUDE OAUTH API\n\n  **Localisation** : `/home/tincenv/analyse-claude-ai/`\n  **État** : 25% complété\n  **Objectif** : Documentation complète et technique de l'API Claude via OAuth (claude.ai)\n\n  ### 🔄 WORKFLOW OBLIGATOIRE\n\n  **AVANT TOUTE TÂCHE liée à Claude API** :\n\n  1. **LIRE LES FICHIERS DE RÉFÉRENCE**\n     ```bash\n     # Vue d'ensemble et progression\n     cat /home/tincenv/analyse-claude-ai/README.md\n\n     # Plan détaillé des actions\n     cat /home/tincenv/analyse-claude-ai/PLAN_COMPLETION.md\n\n     # Résumé visuel rapide\n     cat /home/tincenv/analyse-claude-ai/SUMMARY.txt\n\n  2. IDENTIFIER LA TÂCHE ACTUELLE\n    - Vérifier dans README.md : quelle section est en cours ?\n    - Vérifier dans PLAN_COMPLETION.md : quelle phase ?\n    - Vérifier le % de complétion\n  3. EXÉCUTER LA TÂCHE\n    - Suivre les instructions du PLAN_COMPLETION.md\n    - Capturer les données nécessaires\n    - Sauvegarder dans la bonne structure\n  4. METTRE À JOUR LA DOCUMENTATION\n    - Mettre à jour README.md (progression %)\n    - Ajouter findings dans analyse_claude_api.md\n    - Cocher les checkboxes dans PLAN_COMPLETION.md\n    - Mettre à jour SUMMARY.txt si pertinent\n\n  📂 STRUCTURE DU PROJET\n\n  /home/tincenv/analyse-claude-ai/\n  ├── README.md                   # ⚠️ TOUJOURS LIRE EN PREMIER\n  ├── PLAN_COMPLETION.md          # ⚠️ PLAN DÉTAILLÉ - SUIVRE\n  ├── SUMMARY.txt                 # Résumé visuel\n  ├── analyse_claude_api.md       # Analyse technique (METTRE À JOUR)\n  ├── claude_capture.json         # Captures brutes\n  ├── proxy_capture.py            # Outils\n  └── [futures captures/]         # À créer au fur et à mesure\n\n  🎯 RÈGLES STRICTES\n\n  1. JAMAIS commencer une tâche API sans lire README.md + PLAN_COMPLETION.md\n  2. TOUJOURS mettre à jour la progression après chaque action\n  3. TOUJOURS sauvegarder les captures dans la structure appropriée\n  4. TOUJOURS documenter les findings immédiatement\n  5. TOUJOURS cocher les checkboxes accomplies dans PLAN_COMPLETION.md\n\n  ⚡ QUICK START (si demande liée à Claude API)\n\n  # 1. Check status\n  cat /home/tincenv/analyse-claude-ai/SUMMARY.txt\n\n  # 2. Read plan\n  grep \"Priority: HIGH\" /home/tincenv/analyse-claude-ai/PLAN_COMPLETION.md\n\n  # 3. Execute next action\n  # (suivre PLAN_COMPLETION.md)\n\n  # 4. Update docs\n  # (README.md, analyse_claude_api.md, PLAN_COMPLETION.md)\n\n  🚨 RAPPELS CRITIQUES\n\n  - Ce projet documente l'API OAuth (claude.ai), PAS l'API Key (Anthropic Console)\n  - Tous les tokens capturés sont SENSIBLES - ne jamais partager\n  - Sauvegarder dans /home/tincenv/analyse-claude-ai/captures/ pour organisation\n  - Maintenir la progression à jour dans README.md\n\n  ---\n  ---\n\n  ## 🎯 RATIONALE\n\n  **Pourquoi cet ajout ?**\n\n  1. **Contexte persistant** : Claude saura qu'il y a un projet en cours\n  2. **Workflow clair** : Étapes précises à suivre\n  3. **Pas de perte de contexte** : Toujours lire les fichiers d'abord\n  4. **Documentation continue** : Mise à jour automatique\n  5. **Évite redondance** : Ne pas refaire ce qui est déjà fait\n\n\n      IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.\n</system-reminder>\n"
+            },
+            {
+              "type": "text",
+              "text": "Warmup",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ]
+        }
+      ],
+      "system": [
+        {
+          "type": "text",
+          "text": "You are Claude Code, Anthropic's official CLI for Claude.",
+          "cache_control": {
+            "type": "ephemeral"
+          }
+        },
+        {
+          "type": "text",
+          "text": "You are a file search specialist for Claude Code, Anthropic's official CLI for Claude. You excel at thoroughly navigating and exploring codebases.\n\nYour strengths:\n- Rapidly finding files using glob patterns\n- Searching code and text with powerful regex patterns\n- Reading and analyzing file contents\n\nGuidelines:\n- Use Glob for broad file pattern matching\n- Use Grep for searching file contents with regex\n- Use Read when you know the specific file path you need to read\n- Use Bash for file operations like copying, moving, or listing directory contents\n- Adapt your search approach based on the thoroughness level specified by the caller\n- Return file paths as absolute paths in your final response\n- For clear communication, avoid using emojis\n- Do not create any files, or run bash commands that modify the user's system state in any way\n\nComplete the user's search request efficiently and report your findings clearly.\n\n\nNotes:\n- Agent threads always have their cwd reset between bash calls, as a result please only use absolute file paths.\n- In your final response always share relevant file names and code snippets. Any file paths you return in your response MUST be absolute. Do NOT use relative paths.\n- For clear communication with the user the assistant MUST avoid using emojis.\n\nHere is useful information about the environment you are running in:\n<env>\nWorking directory: /home/tincenv/analyse-claude-ai/.claude\nIs directory a git repo: No\nPlatform: linux\nOS Version: Linux 6.6.87.2-microsoft-standard-WSL2\nToday's date: 2025-11-05\n</env>\nYou are powered by the model named Haiku 4.5. The exact model ID is claude-haiku-4-5-20251001.\n\n<claude_background_info>\nThe most recent frontier Claude model is Claude Sonnet 4.5 (model ID: 'claude-sonnet-4-5-20250929').\n</claude_background_info>\n",
+          "cache_control": {
+            "type": "ephemeral"
+          }
+        }
+      ],
+      "tools": [],
+      "metadata": {
+        "user_id": "user_30a57580f2507a87ed4e34d6621742e8b928423cabd2076ea8ca520cc9c3b008_account_1ba668a2-22ea-4bb1-b844-28efc13e2298_session_b50b677b-e557-4f1d-a7bb-9d54df72f967"
+      },
+      "max_tokens": 32000,
+      "thinking": {
+        "budget_tokens": 30000,
+        "type": "enabled"
+      },
+      "stream": true
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Date": "Wed, 05 Nov 2025 10:02:48 GMT",
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Transfer-Encoding": "chunked",
+      "Connection": "close",
+      "CF-RAY": "999b84819d97e16b-MRS",
+      "Cache-Control": "no-cache",
+      "anthropic-ratelimit-unified-status": "allowed",
+      "anthropic-ratelimit-unified-5h-status": "allowed",
+      "anthropic-ratelimit-unified-5h-reset": "1762344000",
+      "anthropic-ratelimit-unified-7d-status": "allowed",
+      "anthropic-ratelimit-unified-7d-reset": "1762761600",
+      "anthropic-ratelimit-unified-representative-claim": "five_hour",
+      "anthropic-ratelimit-unified-fallback-percentage": "0.5",
+      "anthropic-ratelimit-unified-reset": "1762344000",
+      "anthropic-ratelimit-unified-overage-disabled-reason": "out_of_credits",
+      "request-id": "req_011CUpYv451aeYtPasR2hY6a",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "anthropic-organization-id": "dfc8fb78-2af7-446f-9683-dac08fd0d804",
+      "x-envoy-upstream-service-time": "924",
+      "cf-cache-status": "DYNAMIC",
+      "X-Robots-Tag": "none",
+      "Server": "cloudflare"
+    },
+    "body": {
+      "format": "sse",
+      "events_count": 146,
+      "events": [
+        {
+          "event": "message_start",
+          "data": {
+            "type": "message_start",
+            "message": {
+              "model": "claude-haiku-4-5-20251001",
+              "id": "msg_01UrGJLZhY7bQc4dHTyKECLM",
+              "type": "message",
+              "role": "assistant",
+              "content": [],
+              "stop_reason": null,
+              "stop_sequence": null,
+              "usage": {
+                "input_tokens": 8,
+                "cache_creation_input_tokens": 10415,
+                "cache_read_input_tokens": 0,
+                "cache_creation": {
+                  "ephemeral_5m_input_tokens": 10415,
+                  "ephemeral_1h_input_tokens": 0
+                },
+                "output_tokens": 4,
+                "service_tier": "standard"
+              }
+            }
+          }
+        },
+        {
+          "event": "content_block_start",
+          "data": {
+            "type": "content_block_start",
+            "index": 0,
+            "content_block": {
+              "type": "thinking",
+              "thinking": "",
+              "signature": ""
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "The user is"
+            }
+          }
+        },
+        {
+          "event": "ping",
+          "data": {
+            "type": "ping"
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " sending"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " a"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " \""
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "Warmup\" message, which typically"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " means they're testing"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " that"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " I'm"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " responsive"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " and ready to help. This"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " is"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " a simple"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " greeting"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "/initialization"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " message."
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "\n\nGiven"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " the context, I'm"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " Claude"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " Code"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " ("
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "a file"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " search"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " specialist"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "), and I have"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " extensive"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " instructions"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " from"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " the user about how to work"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " on"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " their projects"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": ","
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " particularly"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " around:"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "\n1"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": ". Using"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " Task"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " tool"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " for"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " parallel"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " execution"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "\n2. Following T"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "DD practices"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "\n3. Following"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " their"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " project"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "-"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "specific workflows"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "\n\nHowever"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": ", for"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " a"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " \"Warmup\" message, I"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " should simply"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " acknowledge that I'm"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " ready an"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "d functioning"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " properly, without overwhelming"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " them with all"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " the instructions"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "."
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "\n\nI shoul"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "d be"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " friendly,"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " conc"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "ise, and ready to help with their"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": " actual request"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "thinking_delta",
+              "thinking": "."
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 0,
+            "delta": {
+              "type": "signature_delta",
+              "signature": "EtYGCkYICRgCKkBvyyhob/j6Gk8/wmwt1Saj3mdPggDW9xKHhrkipbKBtHtA+SvIPGqnjlYVOUwHctHaQSZgmmH3Tk/SH4Y9GU8jEgyhedT4VZ69Sgy/n+4aDFzRjnp1dm2iiRGwmiIwEukS6KGhhuOInh3Zg6i9/6vFRCytUdOG4Js0BsHir8Fij4hpNJeHqP47MZcu+o/vKr0FA99tCYUMjR4f+Cgeds9QEGW78HVuH2/dkf+W5WJ/82APgv2/2XEEzFYknK2Mz8Y8BOOneZ1LbQCuGF8umh4fMY9ECpBNw+fXPdea6sX87gxYRtWDJmBVdTv15eDjPO6fZanpKvHWKpC0dFUGeQoExSejzVIQp2gvmkETsxW7aVtjhN5Mp4rmLD9Or209TDdXr/EI9aTGeApKJEAs6/suGCNMVxBbQ/T5LaInZ+tcA8bWdogTysJjGFlLAZAXTXWn2MGx+XSMAsxofIh3HYJ/Tsjd88IQCfb5cw9WppdqqZFGNWC52NNbXQ+hJOfjTQ5x5T3OhoO87vwaylBI7DJ7xA7XD65M+KUsNrodh2pVAiUgT+tYxcJS9yA+v3VlRpT7/663qLOiKFuGQbnr6fPiDoePx3h9wL05aOdWkZdRPeQkme8iRSQiW8RwXjN+0aWfj/9uC1QdeBKBsREVi8uVvlwfgvQleTwHcgcuxmN2vUM865qByuQq6gVQbM6u/qn99ynmJQyCNHTcjR9/FAP6Lv2URJzKdETkajIOHb9ZufclSVdqp3d2Vl0fiqUEneOa/WeM0cACrOC9+RNI7PsfbQ1ttmkUI6ZO6+/UPhPxKOJUIULPngl+51oN0+ihBYsTfXTOytVrziN67Xi+4rIPDGpUqtOlGfdMm4MrUW71V39vPa9LdlnHmR/jZZ8jk8VigKJ118CzU9J+p6AHyaENge6bRngGiMMCR3CrSGsE+cmh5vEVnJnTha7GnRBqmu4bREtA918E7oXX1Q4OAWQEL8aaB6G1meqs4fiikK7KhFZdZVJlerEOdXOkr4Q9gGAgvORTbrwL4acJnsA/spgaLaslQ4KIkJhy7p5w9mm9dlrn2NksiMYix1Bxx3w5K8SFxeN4HNUi1UA4MJoLumPJAf10qEAmCPSW1VlNrx0YAQ=="
+            }
+          }
+        },
+        {
+          "event": "content_block_stop",
+          "data": {
+            "type": "content_block_stop",
+            "index": 0
+          }
+        },
+        {
+          "event": "content_block_start",
+          "data": {
+            "type": "content_block_start",
+            "index": 1,
+            "content_block": {
+              "type": "text",
+              "text": ""
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "Ready to"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " assist"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "!"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " I'm Claude Code, your file search"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " an"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "d c"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "odebase analysis"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " specialist."
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "\n\nI've"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " reviewed your instructions"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " and project"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " context"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": ":"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "\n- **"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "Claude"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " Code"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " expertise"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "**: File searching"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " with"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " glob"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "/"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "grep"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": ","
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " code analysis, reading"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " specific"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " files\n- **Your"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " CLAUDE"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "."
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "m"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "d rules"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "**: T"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "DD mandatory"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": ", parallel execution with"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " Task tool, contract"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "-first"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " development"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": ", "
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "90"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "%"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "+ coverage"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " requirement"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "\n- **Project"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " context"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "**: Claude"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " OAuth"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " API documentation"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " project"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " at"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " `/"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "home/tincenv/analyse-"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "claude-ai/`\n\nI'm"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " all"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " set to help with:"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "\n- C"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "odebase exploration"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " and file"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " searching"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "\n- Following"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " your parallel"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " execution patterns"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "\n- Resp"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "ecting your project"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " structure and workflows\n- Maintaining your"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " quality"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " standards ("
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "T"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": "DD, contract-first, security"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": ","
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " performance"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": ")\n\nWhat would you like me"
+            }
+          }
+        },
+        {
+          "event": "content_block_delta",
+          "data": {
+            "type": "content_block_delta",
+            "index": 1,
+            "delta": {
+              "type": "text_delta",
+              "text": " to help you with?"
+            }
+          }
+        },
+        {
+          "event": "content_block_stop",
+          "data": {
+            "type": "content_block_stop",
+            "index": 1
+          }
+        },
+        {
+          "event": "message_delta",
+          "data": {
+            "type": "message_delta",
+            "delta": {
+              "stop_reason": "end_turn",
+              "stop_sequence": null
+            },
+            "usage": {
+              "input_tokens": 8,
+              "cache_creation_input_tokens": 10415,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 329
+            }
+          }
+        },
+        {
+          "event": "message_stop",
+          "data": {
+            "type": "message_stop"
+          }
+        }
+      ],
+      "raw": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"model\":\"claude-haiku-4-5-20251001\",\"id\":\"msg_01UrGJLZhY7bQc4dHTyKECLM\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":8,\"cache_creation_input_tokens\":10415,\"cache_read_input_tokens\":0,\"cache_creation\":{\"ephemeral_5m_input_tokens\":10415,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":4,\"service_tier\":\"standard\"}}          }\n\nevent: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"thinking\",\"thinking\":\"\",\"signature\":\"\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"The user is\"}             }\n\nevent: ping\ndata: {\"type\": \"ping\"}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" sending\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" a\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" \\\"\"}               }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"Warmup\\\" message, which typically\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" means they're testing\"}        }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" that\"}    }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" I'm\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" responsive\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" and ready to help. This\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" is\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" a simple\"}    }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" greeting\"}               }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"/initialization\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" message.\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"\\n\\nGiven\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" the context, I'm\"}        }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" Claude\"}             }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" Code\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" (\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"a file\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" search\"}    }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" specialist\"}            }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"), and I have\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" extensive\"}               }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" instructions\"}     }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" from\"}  }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" the user about how to work\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" on\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" their projects\"}        }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\",\"}              }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" particularly\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" around:\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"\\n1\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\". Using\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" Task\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" tool\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" for\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" parallel\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" execution\"}            }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"\\n2. Following T\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"DD practices\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"\\n3. Following\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" their\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" project\"}             }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"-\"}            }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"specific workflows\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"\\n\\nHowever\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\", for\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" a\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" \\\"Warmup\\\" message, I\"}  }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" should simply\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" acknowledge that I'm\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" ready an\"}        }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"d functioning\"}        }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" properly, without overwhelming\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" them with all\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" the instructions\"}            }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\".\"}              }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"\\n\\nI shoul\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"d be\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" friendly,\"}        }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" conc\"}  }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"ise, and ready to help with their\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\" actual request\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\".\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"signature_delta\",\"signature\":\"EtYGCkYICRgCKkBvyyhob/j6Gk8/wmwt1Saj3mdPggDW9xKHhrkipbKBtHtA+SvIPGqnjlYVOUwHctHaQSZgmmH3Tk/SH4Y9GU8jEgyhedT4VZ69Sgy/n+4aDFzRjnp1dm2iiRGwmiIwEukS6KGhhuOInh3Zg6i9/6vFRCytUdOG4Js0BsHir8Fij4hpNJeHqP47MZcu+o/vKr0FA99tCYUMjR4f+Cgeds9QEGW78HVuH2/dkf+W5WJ/82APgv2/2XEEzFYknK2Mz8Y8BOOneZ1LbQCuGF8umh4fMY9ECpBNw+fXPdea6sX87gxYRtWDJmBVdTv15eDjPO6fZanpKvHWKpC0dFUGeQoExSejzVIQp2gvmkETsxW7aVtjhN5Mp4rmLD9Or209TDdXr/EI9aTGeApKJEAs6/suGCNMVxBbQ/T5LaInZ+tcA8bWdogTysJjGFlLAZAXTXWn2MGx+XSMAsxofIh3HYJ/Tsjd88IQCfb5cw9WppdqqZFGNWC52NNbXQ+hJOfjTQ5x5T3OhoO87vwaylBI7DJ7xA7XD65M+KUsNrodh2pVAiUgT+tYxcJS9yA+v3VlRpT7/663qLOiKFuGQbnr6fPiDoePx3h9wL05aOdWkZdRPeQkme8iRSQiW8RwXjN+0aWfj/9uC1QdeBKBsREVi8uVvlwfgvQleTwHcgcuxmN2vUM865qByuQq6gVQbM6u/qn99ynmJQyCNHTcjR9/FAP6Lv2URJzKdETkajIOHb9ZufclSVdqp3d2Vl0fiqUEneOa/WeM0cACrOC9+RNI7PsfbQ1ttmkUI6ZO6+/UPhPxKOJUIULPngl+51oN0+ihBYsTfXTOytVrziN67Xi+4rIPDGpUqtOlGfdMm4MrUW71V39vPa9LdlnHmR/jZZ8jk8VigKJ118CzU9J+p6AHyaENge6bRngGiMMCR3CrSGsE+cmh5vEVnJnTha7GnRBqmu4bREtA918E7oXX1Q4OAWQEL8aaB6G1meqs4fiikK7KhFZdZVJlerEOdXOkr4Q9gGAgvORTbrwL4acJnsA/spgaLaslQ4KIkJhy7p5w9mm9dlrn2NksiMYix1Bxx3w5K8SFxeN4HNUi1UA4MJoLumPJAf10qEAmCPSW1VlNrx0YAQ==\"}             }\n\nevent: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":0               }\n\nevent: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":1,\"content_block\":{\"type\":\"text\",\"text\":\"\"}    }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"Ready to\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" assist\"}  }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"!\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" I'm Claude Code, your file search\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" an\"}     }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"d c\"}              }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"odebase analysis\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" specialist.\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"\\n\\nI've\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" reviewed your instructions\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" and project\"}               }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" context\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\":\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"\\n- **\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"Claude\"}    }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" Code\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" expertise\"}               }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"**: File searching\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" with\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" glob\"}     }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"/\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"grep\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\",\"}            }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" code analysis, reading\"}               }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" specific\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" files\\n- **Your\"}  }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" CLAUDE\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\".\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"m\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"d rules\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"**: T\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"DD mandatory\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\", parallel execution with\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" Task tool, contract\"}     }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"-first\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" development\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\", \"}        }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"90\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"%\"}      }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"+ coverage\"}           }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" requirement\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"\\n- **Project\"}             }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" context\"}             }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"**: Claude\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" OAuth\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" API documentation\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" project\"}             }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" at\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" `/\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"home/tincenv/analyse-\"}            }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"claude-ai/`\\n\\nI'm\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" all\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" set to help with:\"}         }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"\\n- C\"}            }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"odebase exploration\"}     }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" and file\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" searching\"}             }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"\\n- Following\"}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" your parallel\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" execution patterns\"}   }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"\\n- Resp\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"ecting your project\"}              }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" structure and workflows\\n- Maintaining your\"}              }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" quality\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" standards (\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"T\"} }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\"DD, contract-first, security\"}       }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\",\"}          }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" performance\"}     }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\")\\n\\nWhat would you like me\"}              }\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"text_delta\",\"text\":\" to help you with?\"}   }\n\nevent: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":1      }\n\nevent: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\",\"stop_sequence\":null},\"usage\":{\"input_tokens\":8,\"cache_creation_input_tokens\":10415,\"cache_read_input_tokens\":0,\"output_tokens\":329}    }\n\nevent: message_stop\ndata: {\"type\":\"message_stop\"             }\n\n"
+    },
+    "size_bytes": 21206,
+    "is_streaming": true
+  },
+  "metadata": {
+    "is_streaming": true,
+    "is_error": false,
+    "size_bytes": 21206
+  }
+}
