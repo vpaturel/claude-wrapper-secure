@@ -1520,6 +1520,11 @@ class SecureMultiTenantAPI:
 
                     yield event
 
+                    # Check if this is the final result event (end of conversation)
+                    if isinstance(event, dict) and event.get("type") == "result":
+                        logger.info(f"✅ Conversation completed for user: {user_id[:8]}... (keeping process alive)")
+                        break
+
                 except queue.Empty:
                     # Check if process died
                     if info.process.poll() is not None:
