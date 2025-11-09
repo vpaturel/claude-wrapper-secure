@@ -1105,50 +1105,108 @@ class SecureMultiTenantAPI:
                     }
                     return
 
-            # Generator: yield events from queue
-            while True:
-                try:
-                    # Check for errors first
-                    if not error_queue.empty():
-                        error = error_queue.get_nowait()
+            # File Watcher setup (if include_files enabled)
+            file_watcher = None
+            file_queue = None
+            if include_files:
+                from queue import Queue
+                from file_watcher import watch_workspace_production
+
+                file_queue = Queue()
+                file_watcher = watch_workspace_production(user_workspace, file_queue)
+                file_watcher_handler = file_watcher.__enter__()
+                logger.info("📁 File watcher started (real-time mode)")
+
+            # Generator: yield events from queues (Claude + Files)
+            try:
+                while True:
+                    try:
+                        # Check for errors first
+                        if not error_queue.empty():
+                            error = error_queue.get_nowait()
+                            yield {
+                                "type": "error",
+                                "error": {
+                                    "message": error,
+                                    "code": "stream_error"
+                                }
+                            }
+                            break
+
+                        # Process file watcher events (if enabled)
+                        if include_files and file_watcher_handler:
+                            file_watcher_handler.process_pending()
+
+                            # Check file queue for events
+                            if file_queue and not file_queue.empty():
+                                try:
+                                    file_event = file_queue.get_nowait()
+                                    logger.info(f"📄 File event: {file_event['type']}")
+                                    yield file_event
+                                except:
+                                    pass
+
+                        # Get next event from Claude output queue (with timeout)
+                        event = output_queue.get(timeout=0.1)
+
+                        if event is None:
+                            # End of stream
+                            logger.info(f"✅ Stream completed for user: {user_id[:8]}...")
+
+                            # Send final file batch if any pending
+                            if include_files and file_watcher_handler:
+                                file_watcher_handler.process_pending()
+                                while not file_queue.empty():
+                                    try:
+                                        file_event = file_queue.get_nowait()
+                                        yield file_event
+                                    except:
+                                        break
+
+                            break
+
+                        yield event
+
+                    except queue.Empty:
+                        # No event yet, continue waiting
+
+                        # Process file watcher even if no Claude events
+                        if include_files and file_watcher_handler:
+                            file_watcher_handler.process_pending()
+
+                            if file_queue and not file_queue.empty():
+                                try:
+                                    file_event = file_queue.get_nowait()
+                                    yield file_event
+                                except:
+                                    pass
+
+                        # Check if process died
+                        if process.poll() is not None:
+                            # Process terminated
+                            logger.warning(f"⚠️ Process terminated with code {process.returncode}")
+                            break
+                        continue
+
+                    except Exception as e:
+                        logger.error(f"❌ Error yielding event: {e}")
                         yield {
                             "type": "error",
                             "error": {
-                                "message": error,
-                                "code": "stream_error"
+                                "message": str(e),
+                                "code": "generator_error"
                             }
                         }
                         break
 
-                    # Get next event from queue (with timeout)
-                    event = output_queue.get(timeout=0.1)
-
-                    if event is None:
-                        # End of stream
-                        logger.info(f"✅ Stream completed for user: {user_id[:8]}...")
-                        break
-
-                    yield event
-
-                except queue.Empty:
-                    # No event yet, continue waiting
-                    # Check if process died
-                    if process.poll() is not None:
-                        # Process terminated
-                        logger.warning(f"⚠️ Process terminated with code {process.returncode}")
-                        break
-                    continue
-
-                except Exception as e:
-                    logger.error(f"❌ Error yielding event: {e}")
-                    yield {
-                        "type": "error",
-                        "error": {
-                            "message": str(e),
-                            "code": "generator_error"
-                        }
-                    }
-                    break
+            finally:
+                # Stop file watcher
+                if file_watcher:
+                    try:
+                        file_watcher.__exit__(None, None, None)
+                        logger.info("📁 File watcher stopped")
+                    except Exception as e:
+                        logger.warning(f"⚠️ Error stopping file watcher: {e}")
 
         finally:
             # Cleanup: terminate process if still running
