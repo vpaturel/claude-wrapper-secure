@@ -293,9 +293,9 @@ async def root():
     """
     return {
         "service": "Claude Secure Multi-Tenant API",
-        "version": "v34-proactive",
+        "version": "v36-files-watcher",
         "status": "healthy",
-        "description": "Production-ready secure wrapper for Claude OAuth API with Proactive Mode",
+        "description": "Production-ready secure wrapper for Claude OAuth API with Proactive Mode + Auto File Inclusion",
         "base_url": "https://wrapper.claude.serenity-system.fr",
         "documentation": {
             "openapi_spec": "/openapi.json",
@@ -330,15 +330,85 @@ async def root():
                 "benefits": [
                     "Higher quality responses for complex tasks",
                     "Better reasoning on multi-step problems",
-                    "Configurable thinking budget (tokens)",
                     "Useful for code generation, analysis, and reasoning tasks"
                 ],
                 "usage": {
                     "parameter": "thinking",
-                    "format": {"type": "enabled", "budget_tokens": 5000},
-                    "example_curl": 'curl -X POST /v1/messages -d \'{"thinking": {"type": "enabled", "budget_tokens": 5000}, ...}\''
+                    "type": "boolean",
+                    "format": "true (enable) or false (disable)",
+                    "example_curl": 'curl -X POST /v1/messages -d \'{"thinking": true, ...}\''
                 },
-                "models_supported": ["opus", "sonnet"]
+                "models_supported": ["opus", "sonnet"],
+                "note": "Simplified in v36 - now just a boolean flag instead of configuration object"
+            },
+            "📁 NEW - Auto File Inclusion": {
+                "status": "AVAILABLE (v36)",
+                "description": "Automatically retrieve files created/modified by Claude during execution",
+                "benefits": [
+                    "No need for separate API calls to get generated files",
+                    "Real-time file monitoring in streaming mode",
+                    "Supports text and binary files (Base64 encoding)",
+                    "Production-ready file watcher with 6 problem fixes"
+                ],
+                "modes": {
+                    "non_streaming": {
+                        "description": "Snapshot mode - returns all files at completion",
+                        "overhead": "~50-200ms (depends on file count)",
+                        "usage": 'curl -X POST /v1/messages -d \'{"include_files": true, "stream": false, ...}\'',
+                        "response_format": {
+                            "content": [...],
+                            "files": [
+                                {
+                                    "path": "hello.txt",
+                                    "content": "Hello World",
+                                    "encoding": "text",
+                                    "size": 11
+                                }
+                            ],
+                            "files_summary": {
+                                "total": 1,
+                                "total_size": 11
+                            }
+                        }
+                    },
+                    "streaming": {
+                        "description": "Real-time file watcher - SSE events as files are created",
+                        "overhead": "~10-30ms setup",
+                        "usage": 'curl -N -X POST /v1/messages -d \'{"include_files": true, "stream": true, ...}\'',
+                        "sse_events": [
+                            {"type": "file_created", "path": "main.py", "content": "...", "encoding": "text", "size": 1234},
+                            {"type": "files_batch", "files": [...], "count": 3}
+                        ]
+                    }
+                },
+                "file_watcher_features": [
+                    "Debouncing + SHA256 hashing (eliminate duplicate events)",
+                    "Smart filtering (auto-ignores .git, node_modules, .env, __pycache__)",
+                    "Retry with exponential backoff (reliable file reads)",
+                    "Ordered queue (guaranteed event order with timestamps)",
+                    "Rate limiting (10 events/sec, burst 20) + batching (5 files per batch)",
+                    "Context manager cleanup (guaranteed resource cleanup, zero leaks)"
+                ],
+                "encoding": {
+                    "text": "UTF-8 text files returned as-is",
+                    "base64": "Binary files (images, PDFs) encoded in Base64"
+                },
+                "security": {
+                    "workspace_isolation": "Files ONLY from user's isolated workspace",
+                    "ignored_patterns": [".git/", "__pycache__/", "*.pyc", "node_modules/", ".env", "*.tmp"],
+                    "max_file_size": "10 MB per file"
+                },
+                "use_cases": {
+                    "recommended": [
+                        "Code generation (get generated .py, .js files)",
+                        "Document creation (get .md, .txt files)",
+                        "Real-time monitoring (streaming mode for live updates)"
+                    ],
+                    "not_recommended": [
+                        "Large repos (>100 files - use selective filters)",
+                        "Binary-heavy workspaces (many images/PDFs - Base64 overhead)"
+                    ]
+                }
             },
             "🛡️ NEW - Fallback Model": {
                 "status": "AVAILABLE",
@@ -462,6 +532,24 @@ async def root():
                         "type": "object",
                         "required": False,
                         "description": "Optional custom MCP servers configuration"
+                    },
+                    "fallback_model": {
+                        "type": "string",
+                        "required": False,
+                        "options": ["opus", "sonnet", "haiku"],
+                        "description": "Fallback model if primary is overloaded (v35+)"
+                    },
+                    "thinking": {
+                        "type": "boolean",
+                        "required": False,
+                        "default": False,
+                        "description": "Enable extended thinking mode - simplified to boolean in v36 (was object in v35)"
+                    },
+                    "include_files": {
+                        "type": "boolean",
+                        "required": False,
+                        "default": False,
+                        "description": "Auto-include created/modified files in response (v36+). Non-streaming: snapshot at end. Streaming: real-time SSE file events."
                     }
                 },
                 "response_formats": {
