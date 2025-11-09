@@ -638,7 +638,8 @@ class SecureMultiTenantAPI:
         stream: bool = False,
         override_security: Optional[Dict] = None,
         fallback_model: Optional[str] = None,
-        thinking: Optional[Dict] = None
+        thinking: Optional[bool] = None,
+        include_files: bool = False
     ) -> Dict[str, Any]:
         """
         Crée un message avec isolation workspace complète.
@@ -845,14 +846,38 @@ class SecureMultiTenantAPI:
                 try:
                     response = json.loads(result.stdout)
                     logger.info(f"✅ Response received for user: {user_id[:8]}...")
+
+                    # Add files if requested
+                    if include_files:
+                        from file_watcher import get_workspace_snapshot
+                        files = get_workspace_snapshot(user_workspace)
+                        response["files"] = files
+                        response["files_summary"] = {
+                            "total": len(files),
+                            "total_size": sum(f["size"] for f in files)
+                        }
+                        logger.info(f"📁 Included {len(files)} files in response")
+
                     return response
                 except json.JSONDecodeError:
-                    return {
+                    response_data = {
                         "type": "message",
                         "content": [{"type": "text", "text": result.stdout.strip()}],
                         "model": model,
                         "usage": {}
                     }
+
+                    # Add files if requested
+                    if include_files:
+                        from file_watcher import get_workspace_snapshot
+                        files = get_workspace_snapshot(user_workspace)
+                        response_data["files"] = files
+                        response_data["files_summary"] = {
+                            "total": len(files),
+                            "total_size": sum(f["size"] for f in files)
+                        }
+
+                    return response_data
 
         finally:
             # No cleanup needed - credentials passed via --settings (not in files)
@@ -866,7 +891,8 @@ class SecureMultiTenantAPI:
         session_id: Optional[str] = None,
         mcp_servers: Optional[Dict[str, MCPServerConfig]] = None,
         fallback_model: Optional[str] = None,
-        thinking: Optional[Dict] = None
+        thinking: Optional[bool] = None,
+        include_files: bool = False
     ) -> Iterator[Dict[str, Any]]:
         """
         Crée un message avec streaming bidirectionnel (keep-alive connection).
@@ -1460,7 +1486,8 @@ class SecureMultiTenantAPI:
         session_id: Optional[str] = None,
         mcp_servers: Optional[Dict[str, MCPServerConfig]] = None,
         fallback_model: Optional[str] = None,
-        thinking: Optional[Dict] = None
+        thinking: Optional[bool] = None,
+        include_files: bool = False
     ) -> Iterator[Dict[str, Any]]:
         """
         Create message with process pool (multi-request keep-alive).

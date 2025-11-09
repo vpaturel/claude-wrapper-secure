@@ -31,8 +31,8 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI
 app = FastAPI(
     title="Claude Secure Multi-Tenant API",
-    description="Production-ready secure wrapper for Claude OAuth API with Proactive Mode, Extended Thinking, and Fallback Model",
-    version="v35-thinking-fallback",
+    description="Production-ready secure wrapper for Claude OAuth API with Proactive Mode, Extended Thinking, Fallback Model, and Auto File Inclusion",
+    version="v36-files-watcher",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -227,25 +227,6 @@ class MCPServer(BaseModel):
         }
 
 
-class ThinkingConfig(BaseModel):
-    """
-    Extended Thinking configuration (similar to OpenAI o1-preview mode).
-
-    Enables Claude to spend more time "thinking" before responding,
-    leading to higher quality responses for complex tasks.
-    """
-    type: str = Field("enabled", description="Thinking mode: 'enabled' or 'disabled'")
-    budget_tokens: Optional[int] = Field(None, description="Token budget for thinking phase (optional)")
-
-    class Config:
-        json_schema_extra = {
-            "examples": [
-                {"type": "enabled"},
-                {"type": "enabled", "budget_tokens": 5000}
-            ]
-        }
-
-
 class MessageRequest(BaseModel):
     oauth_credentials: OAuthCredentials = Field(..., description="Full OAuth credentials (access + refresh tokens)")
     messages: List[Message] = Field(..., description="Conversation messages")
@@ -256,7 +237,8 @@ class MessageRequest(BaseModel):
 
     # New features (API Anthropic parity)
     fallback_model: Optional[str] = Field(None, description="Fallback model if primary overloaded (opus, sonnet, haiku)")
-    thinking: Optional[ThinkingConfig] = Field(None, description="Extended thinking configuration")
+    thinking: Optional[bool] = Field(None, description="Enable extended thinking mode (default: False)")
+    include_files: bool = Field(False, description="Auto-include created/modified files in response")
 
     class Config:
         json_schema_extra = {
@@ -1167,7 +1149,8 @@ async def create_message(request: MessageRequest):
             mcp_servers=mcp_servers_config,
             stream=request.stream,
             fallback_model=request.fallback_model,
-            thinking=request.thinking.model_dump() if request.thinking else None
+            thinking=request.thinking,
+            include_files=request.include_files
         )
 
         duration = time.time() - start_time
@@ -1277,7 +1260,8 @@ async def create_message_keepalive(request: MessageRequest):
             model=request.model,
             mcp_servers=mcp_servers_config,
             fallback_model=request.fallback_model,
-            thinking=request.thinking.model_dump() if request.thinking else None
+            thinking=request.thinking,
+            include_files=request.include_files
         )
 
         duration = time.time() - start_time
@@ -1391,7 +1375,8 @@ async def create_message_pooled(request: MessageRequest):
             model=request.model,
             mcp_servers=mcp_servers_config,
             fallback_model=request.fallback_model,
-            thinking=request.thinking.model_dump() if request.thinking else None
+            thinking=request.thinking,
+            include_files=request.include_files
         )
 
         duration = time.time() - start_time
